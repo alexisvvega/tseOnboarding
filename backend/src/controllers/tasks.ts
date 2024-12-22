@@ -4,7 +4,7 @@ import TaskModel from "src/models/task";
 export const getAllTasks: RequestHandler = async (req, res, next) => {
   try {
     // Fetch and sort tasks by the creation date in ascending order
-    const tasks = await TaskModel.find().sort({ dateCreated: "asc"});
+    const tasks = await TaskModel.find().sort({ dateCreated: "asc" });
     // Respond with the sorted list of tasks
     res.status(200).json(tasks);
   } catch (error) {
