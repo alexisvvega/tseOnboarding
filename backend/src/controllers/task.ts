@@ -100,7 +100,7 @@ export const updateTask: RequestHandler = async (req, res, next) => {
     const updatedTask = await TaskModel.findByIdAndUpdate(
       id,
       { title, description, isChecked, dateCreated },
-      { new: true } // Return the updated task
+      { new: true }, // Return the updated task
     );
 
     // If no task is found, return a 404 error
