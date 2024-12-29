@@ -8,9 +8,7 @@ import cors from "cors";
 import { isHttpError } from "http-errors";
 import taskRoutes from "src/routes/task";
 import tasksRoutes from "src/routes/tasks";
-import userRoutes from "./routes/user";
-
-
+import userRoutes from "../src/routes/user";
 
 const app = express();
 
