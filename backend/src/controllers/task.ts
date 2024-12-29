@@ -30,12 +30,11 @@ export const getTask: RequestHandler = async (req, res, next) => {
 
   try {
     // if the ID doesn't exist, then findById returns null
-    const task = await TaskModel.findById(id);
+    const task = await TaskModel.findById(id).populate("assignee");
 
-    if (task === null) {
+    if (!task) {
       throw createHttpError(404, "Task not found.");
     }
-
     // Set the status code (200) and body (the task object as JSON) of the response.
     // Note that you don't need to return anything, but you can still use a return
     // statement to exit the function early.
@@ -45,30 +44,33 @@ export const getTask: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
-
 export const createTask: RequestHandler = async (req, res, next) => {
   // extract any errors that were found by the validator
   const errors = validationResult(req);
-  const { title, description, isChecked } = req.body;
+  const { title, description, isChecked, assignee } = req.body;
 
   try {
     // if there are errors, then this function throws an exception
     validationErrorParser(errors);
 
     const task = await TaskModel.create({
-      title: title,
-      description: description,
-      isChecked: isChecked,
+      title,
+      description,
+      isChecked,
+      assignee,
       dateCreated: Date.now(),
     });
 
+    // Populate the assignee field after creation
+    const populatedTask = await TaskModel.findById(task._id).populate("assignee");
     // 201 means a new resource has been created successfully
     // the newly created task is sent back to the user
-    res.status(201).json(task);
+    res.status(201).json(populatedTask);
   } catch (error) {
     next(error);
   }
 };
+
 
 export const removeTask: RequestHandler = async (req, res, next) => {
   const { id } = req.params;
@@ -82,32 +84,30 @@ export const removeTask: RequestHandler = async (req, res, next) => {
   }
 };
 
+
 export const updateTask: RequestHandler = async (req, res, next) => {
   // your code here
-  const { id } = req.params; // Get the ID from the request parameters
-  const { _id, title, description, isChecked, dateCreated } = req.body; // Extract data from the request body
+  const { id } = req.params;// Get the ID from the request parameters
+  const { _id, title, description, isChecked, assignee, dateCreated } = req.body;// Extract data from the request body
+
   try {
     // Validate request body for any errors
     const errors = validationResult(req);
     validationErrorParser(errors);
-
     // Check if the ID in the URL matches the ID in the request body
     if (id !== _id) {
       return res.status(400).json({ message: "ID mismatch between URL and body" });
     }
-
     // Find the task by ID and update it
     const updatedTask = await TaskModel.findByIdAndUpdate(
       id,
-      { title, description, isChecked, dateCreated },
-      { new: true }, // Return the updated task
-    );
-
+      { title, description, isChecked, assignee, dateCreated },
+      { new: true }// Return the updated task
+    ).populate("assignee");
     // If no task is found, return a 404 error
     if (!updatedTask) {
       return res.status(404).json({ message: "Task not found" });
     }
-
     // Return the updated task with a 200 status code
     res.status(200).json(updatedTask);
   } catch (error) {
