@@ -71,7 +71,6 @@ export const createTask: RequestHandler = async (req, res, next) => {
   }
 };
 
-
 export const removeTask: RequestHandler = async (req, res, next) => {
   const { id } = req.params;
 
@@ -84,11 +83,10 @@ export const removeTask: RequestHandler = async (req, res, next) => {
   }
 };
 
-
 export const updateTask: RequestHandler = async (req, res, next) => {
   // your code here
-  const { id } = req.params;// Get the ID from the request parameters
-  const { _id, title, description, isChecked, assignee, dateCreated } = req.body;// Extract data from the request body
+  const { id } = req.params; // Get the ID from the request parameters
+  const { _id, title, description, isChecked, assignee, dateCreated } = req.body; // Extract data from the request body
 
   try {
     // Validate request body for any errors
@@ -102,7 +100,7 @@ export const updateTask: RequestHandler = async (req, res, next) => {
     const updatedTask = await TaskModel.findByIdAndUpdate(
       id,
       { title, description, isChecked, assignee, dateCreated },
-      { new: true }// Return the updated task
+      { new: true }, // Return the updated task
     ).populate("assignee");
     // If no task is found, return a 404 error
     if (!updatedTask) {

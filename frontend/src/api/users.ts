@@ -1,4 +1,4 @@
-import { get, post, put, handleAPIError } from "src/api/requests";
+import { get, handleAPIError, post, put } from "src/api/requests";
 
 import type { APIResult } from "src/api/requests";
 
@@ -96,4 +96,3 @@ export async function updateUser(user: UpdateUserRequest): Promise<APIResult<Use
     return handleAPIError(error);
   }
 }
-
