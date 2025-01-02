@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { getTask } from "src/api/tasks";
 import { Page } from "src/components";
 import styles from "src/pages/TaskDetail.module.css";
+
 import type { Task } from "src/api/tasks";
 
 export function TaskDetail() {
