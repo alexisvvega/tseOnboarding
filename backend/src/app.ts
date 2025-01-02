@@ -26,6 +26,8 @@ app.use(
   }),
 );
 
+// Mount the user routes before the error handler
+app.use(userRoutes);
 app.use("/api/task", taskRoutes);
 app.use("/api/tasks", tasksRoutes);
 
@@ -59,5 +61,3 @@ app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
 });
 
 export default app;
-
-app.use(userRoutes);
